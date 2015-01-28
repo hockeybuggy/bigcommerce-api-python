@@ -54,10 +54,6 @@ class Connection(object):
         elif not url:  # blank path
             url = self.full_path(url)
 
-        qs = urlencode(query)
-        if qs: qs = "?" + qs
-        url += qs
-
         # mess with content
         if data:
             if not headers:  # assume JSON
@@ -68,7 +64,7 @@ class Connection(object):
                 headers['Content-Type'] = 'application/json'
         log.debug("%s %s" % (method, url))
         # make and send the request
-        return self._session.request(method, url, data=data, timeout=self.timeout, headers=headers)
+        return self._session.request(method, url, data=data, timeout=self.timeout, headers=headers, parameters=query)
 
     # CRUD methods
 

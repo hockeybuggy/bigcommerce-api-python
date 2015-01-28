@@ -21,13 +21,13 @@ class TestConnection(unittest.TestCase):
         # Call with nothing
         connection._run_method('GET', '')
         connection._session.request.assert_called_once_with('GET', 'https://store.mybigcommerce.com/api/v2/',
-                                                            data=None, timeout=7.0, headers={})
+                                                            data=None, timeout=7.0, headers={}, parameters={})
         connection._session.request.reset_mock()
 
         # A simple request
         connection._run_method('GET', 'time')
         connection._session.request.assert_called_once_with('GET', 'https://store.mybigcommerce.com/api/v2/time',
-                                                            data=None, timeout=7.0, headers={})
+                                                            data=None, timeout=7.0, headers={}, parameters={})
         connection._session.request.reset_mock()
 
         # A request with data
@@ -40,21 +40,24 @@ class TestConnection(unittest.TestCase):
 
         connection._session.request.assert_called_once_with('POST', 'https://store.mybigcommerce.com/api/v2/products',
                                                             data=json.dumps(data), timeout=7.0,
-                                                            headers={'Content-Type': 'application/json'})
+                                                            headers={'Content-Type': 'application/json'},
+                                                            parameters={})
         connection._session.request.reset_mock()
 
         # A request with filters
-        connection._run_method('GET', '/orders', query={'limit': 50})
+        test_query = {'limit': 50}
+        connection._run_method('GET', '/orders', query=test_query)
         connection._session.request.assert_called_once_with('GET',
-                                                            'https://store.mybigcommerce.com/api/v2/orders?limit=50',
-                                                            data=None, timeout=7.0, headers={})
+                                                            'https://store.mybigcommerce.com/api/v2/orders',
+                                                            data=None, timeout=7.0, headers={}, parameters=test_query)
         connection._session.request.reset_mock()
 
         # A request with multiple filters
-        connection._run_method('GET', '/orders', query={'limit': 50, 'page': 1})
+        test_query = {'limit': 50, 'page': 1}
+        connection._run_method('GET', '/orders', query=test_query)
         connection._session.request.assert_called_once_with('GET',
-                                                            'https://store.mybigcommerce.com/api/v2/orders?limit=50&page=1',
-                                                            data=None, timeout=7.0, headers={})
+                                                            'https://store.mybigcommerce.com/api/v2/orders',
+                                                            data=None, timeout=7.0, headers={}, parameters=test_query)
         connection._session.request.reset_mock()
 
     def test_handle_response(self):
