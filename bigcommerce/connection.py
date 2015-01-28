@@ -11,7 +11,7 @@ try:
     from urllib import urlencode
 except ImportError:
     from urllib.parse import urlencode
-import json  # only used for urlencode querystr
+import json
 import logging
 import streql
 
