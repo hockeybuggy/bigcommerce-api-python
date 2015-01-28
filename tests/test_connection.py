@@ -50,6 +50,13 @@ class TestConnection(unittest.TestCase):
                                                             data=None, timeout=7.0, headers={})
         connection._session.request.reset_mock()
 
+        # A request with multiple filters
+        connection._run_method('GET', '/orders', query={'limit': 50, 'page': 1})
+        connection._session.request.assert_called_once_with('GET',
+                                                            'https://store.mybigcommerce.com/api/v2/orders?limit=50&page=1',
+                                                            data=None, timeout=7.0, headers={})
+        connection._session.request.reset_mock()
+
     def test_handle_response(self):
         connection = Connection('store.mybigcommerce.com', ('user', 'abcdef'))
         # A normal, 200-ok response
